@@ -1,0 +1,598 @@
+{
+  "_meta": {
+    "version": "v1-2026-05-23",
+    "purpose": "Initial seed of DoDI 6130.03 disqualifying conditions. Each row is one condition with: ICD-10 codes for matching against applicant medical events, a `rule` JSONB that the evaluator interprets, waiver path, and citation. NOT exhaustive — DoDI 6130.03 has hundreds of conditions across 14 body systems. This seed covers the ~50 highest-frequency conditions a recruiter actually encounters. Extend by adding entries to this file then re-running `doctrine standards seed-conditions`.",
+    "rule_types": {
+      "simple":             "any documented occurrence is disqualifying",
+      "temporal_treatment": "DQ if currently treated OR treatment ended < recency_months ago",
+      "temporal_episode":   "DQ if any episode occurred < recency_months ago",
+      "recurrence":         "DQ if episodes_min met within window_years",
+      "surgery_recency":    "DQ until months_post_op_min has passed",
+      "severity_threshold": "DQ above the named severity level",
+      "asthma_temporal":    "DQ if asthma symptoms/treatment after age threshold"
+    },
+    "citation_root": "DoDI 6130.03 — Medical Standards for Military Service: Appointment, Enlistment, or Induction"
+  },
+  "conditions": [
+    {
+      "code": "adhd_treated_or_recent",
+      "name": "Attention-deficit / hyperactivity disorder",
+      "aka": ["ADHD", "ADD", "attention deficit"],
+      "icd10_codes": ["F90.0", "F90.1", "F90.2", "F90.8", "F90.9"],
+      "category": "mental_health",
+      "rule": {
+        "type": "temporal_treatment",
+        "recency_months": 24,
+        "explanation": "Disqualifying if treatment (medication or therapy) is ongoing OR ended <24 months ago. Eligible after 24 months off treatment with documented academic/occupational function."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28",
+      "extractor_label": "adhd_treatment_recency_months",
+      "effective_date": "2022-05-06"
+    },
+    {
+      "code": "anxiety_disorder_treated",
+      "name": "Anxiety disorder",
+      "aka": ["generalized anxiety", "panic disorder", "social anxiety"],
+      "icd10_codes": ["F40", "F41", "F41.0", "F41.1", "F41.9"],
+      "category": "mental_health",
+      "rule": {
+        "type": "temporal_treatment",
+        "recency_months": 36,
+        "explanation": "DQ if treatment within 36 months. Single episode resolved without continuing treatment may be considered."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+    {
+      "code": "depression_treated",
+      "name": "Major depressive disorder / depression",
+      "aka": ["depression", "MDD"],
+      "icd10_codes": ["F32", "F33"],
+      "category": "mental_health",
+      "rule": {
+        "type": "temporal_treatment",
+        "recency_months": 36,
+        "explanation": "DQ if active treatment or treatment ended <36 months ago. Single, mild episode with full resolution may be reviewed."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+    {
+      "code": "bipolar_disorder",
+      "name": "Bipolar disorder",
+      "icd10_codes": ["F31"],
+      "category": "mental_health",
+      "rule": {"type": "simple",
+               "explanation": "Bipolar disorder of any type, current or historical, is permanently disqualifying."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+    {
+      "code": "schizophrenia_psychotic",
+      "name": "Schizophrenia or psychotic disorder",
+      "icd10_codes": ["F20", "F23", "F25"],
+      "category": "mental_health",
+      "rule": {"type": "simple",
+               "explanation": "Schizophrenia or any psychotic disorder is permanently disqualifying."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+    {
+      "code": "ptsd",
+      "name": "Post-traumatic stress disorder",
+      "aka": ["PTSD"],
+      "icd10_codes": ["F43.10", "F43.11", "F43.12"],
+      "category": "mental_health",
+      "rule": {"type": "simple",
+               "explanation": "Documented PTSD is disqualifying."},
+      "waiver_possible": true,
+      "waiver_authority": "usarec_cg",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+    {
+      "code": "autism_spectrum",
+      "name": "Autism spectrum disorder",
+      "aka": ["ASD", "Asperger's", "autism"],
+      "icd10_codes": ["F84.0", "F84.5", "F84.9"],
+      "category": "mental_health",
+      "rule": {"type": "simple",
+               "explanation": "Any autism spectrum diagnosis is disqualifying."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+    {
+      "code": "suicide_attempt",
+      "name": "History of suicide attempt",
+      "icd10_codes": ["T14.91"],
+      "category": "mental_health",
+      "rule": {"type": "simple",
+               "explanation": "Any documented suicide attempt is disqualifying."},
+      "waiver_possible": true,
+      "waiver_authority": "usarec_cg",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+    {
+      "code": "eating_disorder",
+      "name": "Eating disorder",
+      "aka": ["anorexia", "bulimia"],
+      "icd10_codes": ["F50.00", "F50.01", "F50.02", "F50.2", "F50.81"],
+      "category": "mental_health",
+      "rule": {
+        "type": "temporal_treatment",
+        "recency_months": 24,
+        "explanation": "DQ if treatment within 24 months."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+
+    {
+      "code": "asthma_after_13",
+      "name": "Asthma after age 13",
+      "icd10_codes": ["J45"],
+      "category": "respiratory",
+      "rule": {
+        "type": "asthma_temporal",
+        "age_threshold_years": 13,
+        "explanation": "DQ if asthma symptoms, treatment, or wheezing after age 13."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.14"
+    },
+    {
+      "code": "anaphylaxis_food_drug",
+      "name": "Anaphylaxis to food or drug",
+      "icd10_codes": ["T78.00", "T78.2", "T88.6"],
+      "category": "respiratory",
+      "rule": {"type": "simple",
+               "explanation": "Documented anaphylaxis to common foods or medications is disqualifying."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.14"
+    },
+
+    {
+      "code": "diabetes_type_1",
+      "name": "Type 1 diabetes mellitus",
+      "icd10_codes": ["E10"],
+      "category": "endocrine",
+      "rule": {"type": "simple",
+               "explanation": "Type 1 diabetes is permanently disqualifying."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.10"
+    },
+    {
+      "code": "diabetes_type_2_meds",
+      "name": "Type 2 diabetes requiring medication",
+      "icd10_codes": ["E11"],
+      "category": "endocrine",
+      "rule": {"type": "simple",
+               "explanation": "Type 2 diabetes on medication is disqualifying."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.10"
+    },
+    {
+      "code": "thyroid_uncontrolled",
+      "name": "Uncontrolled thyroid disease",
+      "icd10_codes": ["E03", "E05"],
+      "category": "endocrine",
+      "rule": {"type": "simple",
+               "explanation": "Uncontrolled hypo- or hyper-thyroidism is DQ; controlled with stable meds may pass."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.10"
+    },
+
+    {
+      "code": "cardiac_arrhythmia",
+      "name": "Cardiac arrhythmia requiring treatment",
+      "icd10_codes": ["I47", "I48", "I49"],
+      "category": "cardiac",
+      "rule": {"type": "simple",
+               "explanation": "Symptomatic or treatment-requiring arrhythmia is DQ. Benign innocent murmurs are not."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.6"
+    },
+    {
+      "code": "hypertension_meds",
+      "name": "Hypertension requiring medication",
+      "icd10_codes": ["I10"],
+      "category": "cardiac",
+      "rule": {"type": "simple",
+               "explanation": "Hypertension on medication is DQ. Single elevated BP reading without diagnosis is not."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.6"
+    },
+    {
+      "code": "congenital_heart_disease",
+      "name": "Congenital heart disease",
+      "icd10_codes": ["Q20", "Q21", "Q22", "Q23", "Q24"],
+      "category": "cardiac",
+      "rule": {"type": "simple",
+               "explanation": "Repaired or unrepaired structural heart defects are DQ."},
+      "waiver_possible": true,
+      "waiver_authority": "usarec_cg",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.6"
+    },
+
+    {
+      "code": "seizure_disorder",
+      "name": "Seizure / epilepsy after age 5",
+      "icd10_codes": ["G40"],
+      "category": "neurologic",
+      "rule": {
+        "type": "temporal_episode",
+        "recency_months": 60,
+        "explanation": "Any seizure after age 5 is DQ unless seizure-free and off meds >5 years."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.13"
+    },
+    {
+      "code": "migraines_severe",
+      "name": "Migraines requiring prescription medication",
+      "icd10_codes": ["G43"],
+      "category": "neurologic",
+      "rule": {
+        "type": "temporal_treatment",
+        "recency_months": 12,
+        "explanation": "Migraines requiring Rx prophylaxis or causing missed school/work within 12 months are DQ."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.13"
+    },
+    {
+      "code": "concussion_severe",
+      "name": "Concussion / TBI with persistent symptoms",
+      "icd10_codes": ["S06"],
+      "category": "neurologic",
+      "rule": {
+        "type": "temporal_episode",
+        "recency_months": 12,
+        "explanation": "TBI with persistent symptoms or LOC >30 min within 12 months is DQ."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.13"
+    },
+
+    {
+      "code": "knee_acl_recent",
+      "name": "ACL or major knee reconstruction",
+      "icd10_codes": ["S83.5"],
+      "category": "orthopedic",
+      "rule": {
+        "type": "surgery_recency",
+        "months_post_op_min": 12,
+        "explanation": "DQ within 12 months post-op. After 12 months with full ROM, no symptoms, may be reviewed."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.18"
+    },
+    {
+      "code": "shoulder_recurrent_dislocation",
+      "name": "Recurrent shoulder dislocation",
+      "icd10_codes": ["S43.0", "M24.41"],
+      "category": "orthopedic",
+      "rule": {"type": "simple",
+               "explanation": "Recurrent dislocation (>1 occurrence without surgical repair) is DQ."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.18"
+    },
+    {
+      "code": "scoliosis_severe",
+      "name": "Scoliosis >30 degrees",
+      "icd10_codes": ["M41"],
+      "category": "orthopedic",
+      "rule": {
+        "type": "severity_threshold",
+        "field": "curvature_degrees",
+        "threshold": 30,
+        "operator": ">",
+        "explanation": "Scoliosis with curvature >30 degrees is DQ."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.18"
+    },
+    {
+      "code": "flat_feet_symptomatic",
+      "name": "Pes planus (flat feet), symptomatic",
+      "icd10_codes": ["Q66.5", "M21.4"],
+      "category": "orthopedic",
+      "rule": {"type": "simple",
+               "explanation": "Symptomatic flat feet (pain on prolonged standing/walking) is DQ. Asymptomatic is not."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.18"
+    },
+
+    {
+      "code": "color_vision_deficiency_severe",
+      "name": "Severe color vision deficiency",
+      "icd10_codes": ["H53.5"],
+      "category": "vision",
+      "rule": {"type": "simple",
+               "explanation": "Severe color vision deficiency may DQ for certain MOS; not a hard general DQ."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.2"
+    },
+    {
+      "code": "refractive_surgery_recent",
+      "name": "LASIK / PRK refractive surgery",
+      "icd10_codes": ["Z98.83"],
+      "category": "vision",
+      "rule": {
+        "type": "surgery_recency",
+        "months_post_op_min": 3,
+        "explanation": "DQ within 3 months post-op. After 3 months with stable vision, may be reviewed."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.2"
+    },
+    {
+      "code": "vision_uncorrected_2020",
+      "name": "Uncorrected distance vision worse than 20/200",
+      "category": "vision",
+      "rule": {
+        "type": "severity_threshold",
+        "field": "uncorrected_distance",
+        "threshold_better_than": "20/200",
+        "explanation": "Uncorrected distance worse than 20/200 in either eye is DQ if not correctable to 20/40."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.2"
+    },
+
+    {
+      "code": "hearing_loss_unilateral",
+      "name": "Hearing loss, unilateral",
+      "icd10_codes": ["H90"],
+      "category": "hearing",
+      "rule": {
+        "type": "severity_threshold",
+        "field": "audiogram_avg_db",
+        "threshold": 35,
+        "operator": ">",
+        "explanation": "Average hearing loss >35 dB at 500/1000/2000 Hz, or >55 dB at 4000 Hz, is DQ."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.3"
+    },
+
+    {
+      "code": "asthma_severe_eczema",
+      "name": "Severe eczema / atopic dermatitis",
+      "icd10_codes": ["L20"],
+      "category": "skin",
+      "rule": {
+        "type": "temporal_treatment",
+        "recency_months": 24,
+        "explanation": "Active or recently-treated severe eczema is DQ."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.21"
+    },
+    {
+      "code": "psoriasis_extensive",
+      "name": "Psoriasis, extensive",
+      "icd10_codes": ["L40"],
+      "category": "skin",
+      "rule": {"type": "simple",
+               "explanation": "Extensive or treatment-requiring psoriasis is DQ."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.21"
+    },
+    {
+      "code": "severe_acne",
+      "name": "Severe nodulocystic acne",
+      "icd10_codes": ["L70.0"],
+      "category": "skin",
+      "rule": {"type": "simple",
+               "explanation": "Severe nodulocystic acne requiring systemic therapy is DQ."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.21"
+    },
+
+    {
+      "code": "crohns_uc",
+      "name": "Inflammatory bowel disease (Crohn's / UC)",
+      "icd10_codes": ["K50", "K51"],
+      "category": "gastrointestinal",
+      "rule": {"type": "simple",
+               "explanation": "Crohn's disease or ulcerative colitis is permanently DQ."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.12"
+    },
+    {
+      "code": "celiac_disease",
+      "name": "Celiac disease",
+      "icd10_codes": ["K90.0"],
+      "category": "gastrointestinal",
+      "rule": {"type": "simple",
+               "explanation": "Celiac disease requiring strict GF diet is DQ."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.12"
+    },
+
+    {
+      "code": "kidney_disease",
+      "name": "Chronic kidney disease",
+      "icd10_codes": ["N18"],
+      "category": "renal",
+      "rule": {"type": "simple",
+               "explanation": "CKD stage 2+ is DQ."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.16"
+    },
+
+    {
+      "code": "lupus_sle",
+      "name": "Systemic lupus erythematosus",
+      "icd10_codes": ["M32"],
+      "category": "immune",
+      "rule": {"type": "simple",
+               "explanation": "Any autoimmune connective tissue disease (lupus, RA, etc.) is DQ."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.11"
+    },
+    {
+      "code": "rheumatoid_arthritis",
+      "name": "Rheumatoid arthritis",
+      "icd10_codes": ["M05", "M06"],
+      "category": "immune",
+      "rule": {"type": "simple",
+               "explanation": "RA is DQ regardless of severity."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.11"
+    },
+
+    {
+      "code": "hiv_positive",
+      "name": "HIV positive",
+      "icd10_codes": ["B20", "Z21"],
+      "category": "infectious",
+      "rule": {"type": "simple",
+               "explanation": "Confirmed HIV positive is DQ."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.5"
+    },
+    {
+      "code": "hepatitis_b_chronic",
+      "name": "Chronic hepatitis B",
+      "icd10_codes": ["B18.1"],
+      "category": "infectious",
+      "rule": {"type": "simple",
+               "explanation": "Chronic active Hep B is DQ; cleared infection is not."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.5"
+    },
+
+    {
+      "code": "cancer_history",
+      "name": "Cancer history (excl. basal cell)",
+      "icd10_codes": ["C", "D00"],
+      "category": "oncology",
+      "rule": {
+        "type": "temporal_episode",
+        "recency_months": 60,
+        "explanation": "Any malignancy other than basal cell skin cancer requires 5-year disease-free interval."
+      },
+      "waiver_possible": true,
+      "waiver_authority": "usarec_cg",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.20"
+    },
+
+    {
+      "code": "pregnancy_current",
+      "name": "Pregnancy at time of enlistment",
+      "icd10_codes": ["Z33", "O00", "O80"],
+      "category": "reproductive",
+      "rule": {"type": "simple",
+               "explanation": "Pregnancy at enlistment is DQ until 6 months postpartum."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.17"
+    },
+
+    {
+      "code": "blood_disorder_severe",
+      "name": "Sickle cell disease or thalassemia",
+      "icd10_codes": ["D57", "D56"],
+      "category": "hematologic",
+      "rule": {"type": "simple",
+               "explanation": "Sickle cell disease (not trait) is DQ. Severe thalassemia is DQ."},
+      "waiver_possible": false,
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.7"
+    },
+
+    {
+      "code": "speech_impediment_severe",
+      "name": "Speech impediment, severe",
+      "icd10_codes": ["F80.0", "F80.81"],
+      "category": "communication",
+      "rule": {"type": "simple",
+               "explanation": "Severe stuttering or speech impediment affecting communication is DQ."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.28"
+    },
+
+    {
+      "code": "dental_severe",
+      "name": "Severe dental disease / missing teeth",
+      "icd10_codes": ["K08"],
+      "category": "dental",
+      "rule": {"type": "simple",
+               "explanation": "Severe dental disease, missing critical teeth, or untreated acute pathology is DQ until treated."},
+      "waiver_possible": true,
+      "waiver_authority": "meps_cmdr",
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.9"
+    }
+  ]
+}

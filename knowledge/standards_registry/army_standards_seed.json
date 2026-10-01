@@ -1,0 +1,822 @@
+{
+  "_meta": {
+    "version": "v1-2026-05-23",
+    "purpose": "Initial seed of Army eligibility standards, sourced from current AR 601-210 (ARN30575 in local lib) and DoDI 1304.26. Each row is a single machine-readable rule with a doctrine citation. Refresh workflow updates these rows when the source regulation refreshes.",
+    "schema": {
+      "standard_key": "stable identifier (snake_case). Code references this string.",
+      "category": "high-level bucket \u2014 used for grouping in UIs",
+      "label": "short human label",
+      "description": "1-2 sentence explanation",
+      "current_value": "JSONB shape varies by rule (see types below)",
+      "doctrine_citation": "doc_id, FK-ish to chunks.document",
+      "citation_section": "paragraph/section number",
+      "effective_date": "best-known effective date of this version"
+    },
+    "value_types": {
+      "max": "{\"type\":\"max\",\"value\":N,\"unit\":\"...\"}",
+      "min": "{\"type\":\"min\",\"value\":N,\"unit\":\"...\"}",
+      "range": "{\"type\":\"range\",\"min\":A,\"max\":B,\"unit\":\"...\"}",
+      "set": "{\"type\":\"set\",\"allowed\":[...],\"disallowed\":[...]}",
+      "bool": "{\"type\":\"bool\",\"value\":true|false}",
+      "tier": "{\"type\":\"tier\",\"tiers\":[{\"name\":\"I\",\"threshold\":31},...]}"
+    }
+  },
+  "standards": [
+    {
+      "standard_key": "max_enlistment_age_ra",
+      "category": "age",
+      "label": "Maximum enlistment age (Regular Army)",
+      "description": "Hard ceiling on age at time of enlistment for the Regular Army. Applicants above this require an age waiver.",
+      "current_value": {
+        "type": "max",
+        "value": 35,
+        "unit": "years"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-2a",
+      "effective_date": "2016-08-31",
+      "extractor_label": "enlistment_age_limit",
+      "notes": "AR 601-210 (2016 ARN30575) version. Refresh to ARN42922 will update if value changes."
+    },
+    {
+      "standard_key": "age_waiver_range_ra",
+      "category": "age",
+      "label": "Age waiver range (Regular Army)",
+      "description": "Age band where a waiver may be granted by the receiving major Army command CG.",
+      "current_value": {
+        "type": "range",
+        "min": 36,
+        "max": 39,
+        "unit": "years",
+        "waiver_authority": "mac_cg"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-2b",
+      "effective_date": "2016-08-31",
+      "extractor_label": "age_waiver_range"
+    },
+    {
+      "standard_key": "max_enlistment_age_usar",
+      "category": "age",
+      "label": "Maximum enlistment age (USAR)",
+      "current_value": {
+        "type": "max",
+        "value": 40,
+        "unit": "years"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-2",
+      "effective_date": "2016-08-31",
+      "extractor_label": "enlistment_age_limit_usar"
+    },
+    {
+      "standard_key": "min_enlistment_age",
+      "category": "age",
+      "label": "Minimum enlistment age",
+      "description": "17 with parental consent, 18 without.",
+      "current_value": {
+        "type": "min",
+        "value": 17,
+        "unit": "years",
+        "parental_consent_required_below": 18
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-2",
+      "effective_date": "2016-08-31",
+      "extractor_label": "enlistment_age_minimum"
+    },
+    {
+      "standard_key": "afqt_min_active_duty",
+      "category": "asvab",
+      "label": "Minimum AFQT score for active duty",
+      "current_value": {
+        "type": "min",
+        "value": 31,
+        "unit": "AFQT"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-7",
+      "effective_date": "2016-08-31",
+      "extractor_label": "afqt_minimum"
+    },
+    {
+      "standard_key": "afqt_min_high_school_graduate",
+      "category": "asvab",
+      "label": "Minimum AFQT for high school graduate (Tier I)",
+      "current_value": {
+        "type": "min",
+        "value": 31,
+        "unit": "AFQT",
+        "education_tier": "I"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-8",
+      "effective_date": "2016-08-31",
+      "extractor_label": "afqt_min_tier_i"
+    },
+    {
+      "standard_key": "afqt_min_ged_holder",
+      "category": "asvab",
+      "label": "Minimum AFQT for GED (Tier II)",
+      "current_value": {
+        "type": "min",
+        "value": 50,
+        "unit": "AFQT",
+        "education_tier": "II"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-8",
+      "effective_date": "2016-08-31",
+      "extractor_label": "afqt_min_tier_ii"
+    },
+    {
+      "standard_key": "tier_iv_cap_fy",
+      "category": "asvab",
+      "label": "Tier IV applicants cap per fiscal year",
+      "description": "Hard cap on the fraction of enlistments from CAT IV (AFQT 10-30) per fiscal year. NEEDS REVIEW — citation section uncertain; the 4% cap is DoD-wide but Enclosure 4 is moral character, not score caps. Operator: verify against current DoDI 1304.26 body + AR 601-210 Para 2-8.",
+      "current_value": {
+        "type": "max",
+        "value": 4,
+        "unit": "percent"
+      },
+      "doctrine_citation": "DoDI_1304.26",
+      "citation_section": "(citation pending review)",
+      "effective_date": "2017-12-08",
+      "extractor_label": "tier_iv_cap"
+    },
+    {
+      "standard_key": "citizenship_eligibility",
+      "category": "citizenship",
+      "label": "Eligible citizenship statuses",
+      "current_value": {
+        "type": "set",
+        "allowed": [
+          "us_born",
+          "us_naturalized",
+          "us_derived",
+          "permanent_resident"
+        ],
+        "disallowed": [
+          "asylum_refugee",
+          "conditional_resident"
+        ]
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 2",
+      "effective_date": "2016-08-31",
+      "extractor_label": "citizenship_allowed_set"
+    },
+    {
+      "standard_key": "ed_tier_i_diploma_required",
+      "category": "education",
+      "label": "Tier I requires HSD or equivalent",
+      "current_value": {
+        "type": "bool",
+        "value": true
+      },
+      "doctrine_citation": "DoDI_1304.26",
+      "citation_section": "Enclosure 4",
+      "effective_date": "2017-12-08",
+      "extractor_label": "tier_i_requires_diploma"
+    },
+    {
+      "standard_key": "max_dependents_no_waiver",
+      "category": "family",
+      "label": "Dependents allowed without waiver (single applicant)",
+      "description": "A never-married applicant with custody of more than this number of dependents under 18 requires a waiver.",
+      "current_value": {
+        "type": "max",
+        "value": 2,
+        "unit": "dependents",
+        "applies_to": "single_no_spouse"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "max_dependents_single"
+    },
+    {
+      "standard_key": "married_with_children_waiver",
+      "category": "family",
+      "label": "Married applicant with children needing waiver",
+      "current_value": {
+        "type": "bool",
+        "value": true,
+        "waiver_authority": "battalion_cdr"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "married_with_children_requires_waiver"
+    },
+    {
+      "standard_key": "height_min_male",
+      "category": "physical",
+      "label": "Minimum height (male)",
+      "current_value": {
+        "type": "min",
+        "value": 60,
+        "unit": "inches"
+      },
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.1",
+      "effective_date": "2022-05-01",
+      "extractor_label": "height_minimum_male_inches"
+    },
+    {
+      "standard_key": "height_max_male",
+      "category": "physical",
+      "label": "Maximum height (male)",
+      "current_value": {
+        "type": "max",
+        "value": 80,
+        "unit": "inches"
+      },
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.1",
+      "effective_date": "2022-05-01",
+      "extractor_label": "height_maximum_male_inches"
+    },
+    {
+      "standard_key": "height_min_female",
+      "category": "physical",
+      "label": "Minimum height (female)",
+      "current_value": {
+        "type": "min",
+        "value": 58,
+        "unit": "inches"
+      },
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.1",
+      "effective_date": "2022-05-01",
+      "extractor_label": "height_minimum_female_inches"
+    },
+    {
+      "standard_key": "height_max_female",
+      "category": "physical",
+      "label": "Maximum height (female)",
+      "current_value": {
+        "type": "max",
+        "value": 80,
+        "unit": "inches"
+      },
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Section 5.1",
+      "effective_date": "2022-05-01",
+      "extractor_label": "height_maximum_female_inches"
+    },
+    {
+      "standard_key": "felony_eligibility",
+      "category": "moral",
+      "label": "Felony conviction eligibility",
+      "current_value": {
+        "type": "bool",
+        "value": false,
+        "waiver_authority": "usarec_cg",
+        "waiver_possible": true
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "felony_lifetime_dq"
+    },
+    {
+      "standard_key": "drug_thc_history_waiver",
+      "category": "moral",
+      "label": "Past THC use waiver",
+      "current_value": {
+        "type": "bool",
+        "value": true,
+        "waiver_authority": "battalion_cdr",
+        "limit_pre_enlistment": "1_year_no_use"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "thc_recency_months_min"
+    },
+    {
+      "standard_key": "drug_other_history",
+      "category": "moral",
+      "label": "Other drug history",
+      "current_value": {
+        "type": "set",
+        "disallowed": [
+          "heroin",
+          "cocaine",
+          "methamphetamine",
+          "lsd",
+          "psilocybin_recurrent"
+        ],
+        "waiver_possible_for": [
+          "thc",
+          "single_use"
+        ]
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "hard_drug_lifetime_dq_set"
+    },
+    {
+      "standard_key": "tattoo_face_neck_hand",
+      "category": "appearance",
+      "label": "Tattoos on face, neck (above collar), hands",
+      "current_value": {
+        "type": "bool",
+        "value": false,
+        "exceptions": [
+          "ring_finger_single_band",
+          "small_hand_per_AR_670-1"
+        ],
+        "waiver_authority": "bde_cdr"
+      },
+      "doctrine_citation": "AR_670-1",
+      "citation_section": "Para 3-3",
+      "effective_date": "2023-01-26",
+      "extractor_label": "tattoo_restricted_zones"
+    },
+    {
+      "standard_key": "re_code_eligibility",
+      "category": "prior_service",
+      "label": "Eligible RE codes from prior service",
+      "current_value": {
+        "type": "set",
+        "allowed": [
+          "RE-1",
+          "RE-3"
+        ],
+        "disallowed": [
+          "RE-2",
+          "RE-4"
+        ],
+        "waiver_possible_for": [
+          "RE-3"
+        ]
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "re_code_allowed_set"
+    },
+    {
+      "standard_key": "discharge_type_eligibility",
+      "category": "prior_service",
+      "label": "Eligible prior-service discharge types",
+      "current_value": {
+        "type": "set",
+        "allowed": [
+          "honorable",
+          "general"
+        ],
+        "disallowed": [
+          "oth",
+          "bcd",
+          "dd",
+          "entry_level"
+        ],
+        "waiver_possible_for": [
+          "general",
+          "oth"
+        ]
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "discharge_eligible_set"
+    },
+    {
+      "standard_key": "selective_service_required",
+      "category": "registration",
+      "label": "Selective Service registration required (male, 18-25)",
+      "current_value": {
+        "type": "bool",
+        "value": true,
+        "applies_to_gender": "M",
+        "age_range": [
+          18,
+          25
+        ]
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "sss_required_male_age_range"
+    },
+    {
+      "standard_key": "term_of_service_options",
+      "category": "enlistment",
+      "label": "Allowed terms of service",
+      "current_value": {
+        "type": "set",
+        "allowed": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "unit": "years"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 5",
+      "effective_date": "2016-08-31",
+      "extractor_label": "term_years_allowed_set"
+    },
+    {
+      "standard_key": "reserve_obligation_minimum",
+      "category": "enlistment",
+      "label": "Minimum reserve obligation",
+      "description": "Minimum reserve obligation total (active + IRR) for enlistees.",
+      "current_value": {
+        "type": "min",
+        "value": 8,
+        "unit": "years"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 5",
+      "effective_date": "2016-08-31",
+      "extractor_label": "reserve_obligation_years_min"
+    },
+    {
+      "standard_key": "bmi_max_male",
+      "category": "physical",
+      "label": "Maximum BMI (male) for enlistment screening",
+      "description": "Body-mass-index ceiling for male applicants \u2014 body-fat tape test required if exceeded (AR 600-9).",
+      "current_value": {
+        "type": "max",
+        "value": 27.5,
+        "unit": "kg/m2",
+        "applies_to_gender": "M"
+      },
+      "doctrine_citation": "AR_600-9",
+      "citation_section": "Para 3-2",
+      "effective_date": "2019-07-16",
+      "extractor_label": "bmi_max_male"
+    },
+    {
+      "standard_key": "bmi_max_female",
+      "category": "physical",
+      "label": "Maximum BMI (female) for enlistment screening",
+      "description": "Body-mass-index ceiling for female applicants \u2014 body-fat tape test required if exceeded (AR 600-9).",
+      "current_value": {
+        "type": "max",
+        "value": 26.5,
+        "unit": "kg/m2",
+        "applies_to_gender": "F"
+      },
+      "doctrine_citation": "AR_600-9",
+      "citation_section": "Para 3-2",
+      "effective_date": "2019-07-16",
+      "extractor_label": "bmi_max_female"
+    },
+    {
+      "standard_key": "felony_count_zero",
+      "category": "moral",
+      "label": "Felony convictions on record \u2014 zero with no waiver",
+      "current_value": {
+        "type": "max",
+        "value": 0,
+        "unit": "felony_convictions",
+        "waiver_authority": "usarec_cg"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "felony_count_zero"
+    },
+    {
+      "standard_key": "misdemeanor_count_max",
+      "category": "moral",
+      "label": "Misdemeanor convictions \u2014 cap without waiver",
+      "description": "More than this count requires a moral waiver.",
+      "current_value": {
+        "type": "max",
+        "value": 4,
+        "unit": "misdemeanor_convictions",
+        "waiver_authority": "battalion_cdr"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "misdemeanor_count_max"
+    },
+    {
+      "standard_key": "traffic_violations_max",
+      "category": "moral",
+      "label": "Major traffic violations \u2014 cap without waiver",
+      "current_value": {
+        "type": "max",
+        "value": 5,
+        "unit": "major_traffic_violations",
+        "waiver_authority": "company_cdr"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "major_traffic_count_max"
+    },
+    {
+      "standard_key": "domestic_violence_lifetime",
+      "category": "moral",
+      "label": "Domestic violence conviction \u2014 lifetime",
+      "description": "Lautenberg Amendment: domestic-violence misdemeanor conviction bars firearm possession \u2014 permanent DQ from Army service.",
+      "current_value": {
+        "type": "bool",
+        "value": false,
+        "waiver_possible": false
+      },
+      "doctrine_citation": "18_USC_922(g)(9)",
+      "citation_section": "Lautenberg Amendment",
+      "effective_date": "1996-09-30",
+      "extractor_label": "dv_lautenberg_dq"
+    },
+    {
+      "standard_key": "drug_thc_last_use_recency",
+      "category": "moral",
+      "label": "THC (marijuana) last-use recency before enlistment",
+      "description": "Last use of marijuana more than 12 months before enlistment \u2014 under that requires THC waiver.",
+      "current_value": {
+        "type": "min",
+        "value": 12,
+        "unit": "months_clean",
+        "waiver_authority": "battalion_cdr"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "thc_months_clean_min"
+    },
+    {
+      "standard_key": "drug_hard_substances_lifetime_dq",
+      "category": "moral",
+      "label": "Hard-drug history \u2014 lifetime disqualifier",
+      "description": "Documented use of cocaine, heroin, methamphetamine, PCP, or LSD bars enlistment \u2014 extremely limited waiver path.",
+      "current_value": {
+        "type": "set",
+        "disallowed": [
+          "cocaine",
+          "heroin",
+          "methamphetamine",
+          "pcp",
+          "lsd"
+        ],
+        "waiver_authority": "usarec_cg"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "hard_drug_set_lifetime_dq"
+    },
+    {
+      "standard_key": "tattoo_face_neck_hand_band",
+      "category": "appearance",
+      "label": "Tattoos in face / neck / hand zones",
+      "description": "Tattoos in restricted zones (face, neck above the collar, hands beyond a single ring band) require a tattoo waiver.",
+      "current_value": {
+        "type": "set",
+        "disallowed_locations": [
+          "face",
+          "neck",
+          "scalp",
+          "hand_back",
+          "hand_palm",
+          "finger_above_first_knuckle"
+        ],
+        "waiver_authority": "bde_cdr"
+      },
+      "doctrine_citation": "AR_670-1",
+      "citation_section": "Para 3-3",
+      "effective_date": "2023-01-26",
+      "extractor_label": "tattoo_restricted_zones_band"
+    },
+    {
+      "standard_key": "re_code_disqualifiers",
+      "category": "prior_service",
+      "label": "Disqualifying RE codes from prior service",
+      "current_value": {
+        "type": "set",
+        "allowed": [
+          "RE-1",
+          "RE-3"
+        ],
+        "disallowed": [
+          "RE-2",
+          "RE-4"
+        ],
+        "waiver_possible_for": [
+          "RE-3"
+        ],
+        "waiver_authority": "usarec_cg"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "re_code_disqualified_set"
+    },
+    {
+      "standard_key": "discharge_type_disqualifiers",
+      "category": "prior_service",
+      "label": "Disqualifying prior-service discharge types",
+      "current_value": {
+        "type": "set",
+        "disallowed": [
+          "bcd",
+          "dd",
+          "entry_level"
+        ],
+        "waiver_possible_for": [
+          "general",
+          "oth"
+        ],
+        "waiver_authority": "usarec_cg"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "discharge_disqualified_set"
+    },
+    {
+      "standard_key": "selective_service_male_18_plus",
+      "category": "registration",
+      "label": "Selective Service registration required for males 18+",
+      "description": "All US-born and naturalized US-citizen males age 18-25 must register before enlistment.",
+      "current_value": {
+        "type": "bool",
+        "value": true,
+        "applies_to_gender": "M",
+        "age_window_years": [
+          18,
+          25
+        ]
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Para 2-3",
+      "effective_date": "2016-08-31",
+      "extractor_label": "sss_required_male_age_range"
+    },
+    {
+      "standard_key": "felonies_recurrent_5yr",
+      "category": "moral",
+      "label": "2+ felonies within 5 years \u2014 higher waiver authority",
+      "description": "Per AR 601-210 ch 4, applicants with 2 or more felony convictions within 5 years of enlistment date escalate to USAREC CG-level waiver authority regardless of expungement.",
+      "current_value": {
+        "type": "recurrence",
+        "severity_set": [
+          "felony"
+        ],
+        "episodes_min": 2,
+        "window_years": 5,
+        "waiver_authority": "usarec_cg"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "felony_recurrence_episodes_min"
+    },
+    {
+      "standard_key": "misdemeanors_recurrent_3yr",
+      "category": "moral",
+      "label": "3+ misdemeanors within 3 years \u2014 pattern flag",
+      "description": "A pattern of misdemeanors (3+ within 3 years) escalates to battalion CDR waiver per AR 601-210 ch 4.",
+      "current_value": {
+        "type": "recurrence",
+        "severity_set": [
+          "misdemeanor_minor",
+          "misdemeanor_serious"
+        ],
+        "episodes_min": 3,
+        "window_years": 3,
+        "waiver_authority": "battalion_cdr"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "misdemeanor_recurrence_episodes_min"
+    },
+    {
+      "standard_key": "drug_use_within_year",
+      "category": "moral",
+      "label": "Any drug use within 12 months of enlistment date",
+      "description": "ANY illicit drug use (not just marijuana) within 12 months of the scheduled ship date requires moral waiver.",
+      "current_value": {
+        "type": "temporal_episode",
+        "recency_months": 12,
+        "waiver_authority": "battalion_cdr"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "drug_recency_months_min"
+    },
+    {
+      "standard_key": "dual_citizenship_security_review",
+      "category": "citizenship",
+      "label": "Dual citizenship triggers security review",
+      "description": "Any non-US citizenship requires a security-review waiver path (cleared via the personnel security office). The applicant's stated intent to renounce is recorded but does not automatically resolve the standard.",
+      "current_value": {
+        "type": "bool",
+        "value": false,
+        "waiver_authority": "personnel_security",
+        "notes": "Possession of a non-US citizenship by any applicant triggers waiver path; even applicants intending to renounce remain in waiver_needed until the renunciation is on file."
+      },
+      "doctrine_citation": "SF_86",
+      "citation_section": "Section 10",
+      "effective_date": "2017-01-01",
+      "extractor_label": "dual_citizenship_security_required"
+    },
+    {
+      "standard_key": "combined_jeopardy_felony_plus_hard_drug",
+      "category": "moral",
+      "label": "Felony conviction + hard-drug history co-occurrence",
+      "description": "Combined-jeopardy rule: when an applicant has both an unexpunged felony AND lifetime hard-drug (cocaine, heroin, methamphetamine, MDMA, LSD, PCP) history, the waiver authority is escalated to USAREC CG regardless of the individual rule outcomes.",
+      "current_value": {
+        "type": "combined_jeopardy",
+        "felony_required": true,
+        "hard_drug_substances": [
+          "cocaine", "heroin", "methamphetamine",
+          "mdma", "ecstasy", "lsd", "pcp",
+          "ketamine", "fentanyl"
+        ],
+        "waiver_authority": "usarec_cg"
+      },
+      "doctrine_citation": "AR_601-210",
+      "citation_section": "Chapter 4",
+      "effective_date": "2016-08-31",
+      "extractor_label": "combined_moral_jeopardy"
+    },
+    {
+      "standard_key": "education_tier_classification",
+      "category": "education",
+      "label": "Education tier classification (DoDI 1304.26)",
+      "description": "Derive Tier I/II/III from diploma_type + completed semester-credit hours per DoDI 1304.26. Tier I: HS diploma, 1-yr post-secondary completion, or 15 college credits. Tier II: GED, alternative credential. Tier III: no diploma.",
+      "current_value": {
+        "type": "tier",
+        "tiers": [
+          {"name": "I",   "rules": ["hs_diploma", "ged_with_15_credits", "associates_or_higher"]},
+          {"name": "II",  "rules": ["ged", "homeschool_unaccredited", "occupational_certificate"]},
+          {"name": "III", "rules": ["no_diploma"]}
+        ],
+        "min_credits_for_tier_i_with_ged": 15
+      },
+      "doctrine_citation": "DoDI_1304.26",
+      "citation_section": "Enclosure 3",
+      "effective_date": "2015-03-23",
+      "extractor_label": "education_tier_classifier"
+    },
+    {
+      "standard_key": "iep_504_learning_disorder_review",
+      "category": "medical",
+      "label": "IEP/504 with learning disorder requires review",
+      "description": "An applicant who had an IEP or 504 plan AND has a documented learning disorder (per DoDI 6130.03 + DD 2807-2 §10) requires a waiver. An IEP/504 alone without a learning-disorder flag passes; a learning-disorder flag alone follows the standard medical waiver path.",
+      "current_value": {
+        "type": "combined_jeopardy",
+        "iep_504_required": true,
+        "learning_disorder_required": true,
+        "iep_resolved_grace_years": 3,
+        "waiver_authority": "meps_cmdr"
+      },
+      "doctrine_citation": "DoDI_6130.03",
+      "citation_section": "Vol 1",
+      "effective_date": "2018-05-06",
+      "extractor_label": "iep_504_learning_disorder_review"
+    },
+    {
+      "standard_key": "financial_hardship_threshold",
+      "category": "financial",
+      "label": "Financial hardship threshold (7-yr lookback)",
+      "description": "Two or more financial events with severity >= 'judgment' in the past 7 years triggers a battalion-CDR waiver. Includes bankruptcies, civil judgments, defaults on federal debt, repossessions. SF 86 §26 / DD 1966 §41.",
+      "current_value": {
+        "type": "financial_threshold",
+        "severity_threshold": ["judgment", "bankruptcy", "default", "repossession", "lien"],
+        "lookback_years": 7,
+        "max_events_no_waiver": 1,
+        "waiver_authority": "battalion_cdr"
+      },
+      "doctrine_citation": "SF_86",
+      "citation_section": "Section 26",
+      "effective_date": "2017-01-01",
+      "extractor_label": "financial_hardship_threshold"
+    },
+    {
+      "standard_key": "prior_military_app_dq_eligibility",
+      "category": "moral",
+      "label": "Prior military application DQ-eligible outcomes (DD 1966 §8)",
+      "description": "Walk applicant_prev_military_app: outcomes 'failed_meps', 'discharged', 'self_withdrawal_after_oath', 're_code_dq' require waiver per the outcome's authority. 'rejected_pre_oath' is informational only.",
+      "current_value": {
+        "type": "prior_military_outcomes",
+        "dq_outcomes": {
+          "failed_meps":            {"waiver_authority": "meps_cmdr"},
+          "discharged":             {"waiver_authority": "usarec_cg"},
+          "self_withdrawal_after_oath": {"waiver_authority": "battalion_cdr"},
+          "re_code_dq":             {"waiver_authority": "usarec_cg"}
+        },
+        "informational_outcomes": ["rejected_pre_oath", "withdrawn_pre_oath"]
+      },
+      "doctrine_citation": "DD_1966",
+      "citation_section": "Section 8",
+      "effective_date": "2016-01-01",
+      "extractor_label": "prior_military_outcomes_classifier"
+    }
+  ]
+}

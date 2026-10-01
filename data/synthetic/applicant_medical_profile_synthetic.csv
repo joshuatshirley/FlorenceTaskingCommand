@@ -1,0 +1,9 @@
+synthetic_applicant_id,dob,gender,citizenship_status,height_inches,weight_lbs,has_medical_conditions,medical_event_type,medical_event_name,onset_date,resolved_date,is_chronic,icd10_code,treatment_notes,waiver_required,mh_has_adhd,mh_has_anxiety_disorder,mh_has_depression,mh_psych_meds_current,mh_last_psych_treatment_date,mh_has_suicidal_ideation,mh_has_iep_504
+SYN-0001,2006-03-14,M,us_born,70,165,true,mental_health,ADHD,2015-01-01,,true,F90.0,"stimulant medication, last dose 10 months ago",true,true,false,false,,2025-12-01,false,true
+SYN-0002,2005-07-22,F,us_born,64,130,true,condition,Asthma,2012-06-01,2021-09-01,false,J45.909,"no symptoms or treatment since age 16",false,false,false,false,,,false,false
+SYN-0003,2004-11-02,M,us_naturalized,72,190,true,surgery,ACL reconstruction,2024-02-10,2024-02-10,false,S83.5,"post-op recovery, cleared by ortho",true,false,false,false,,,false,false
+SYN-0004,2007-01-30,F,us_born,66,140,true,mental_health,Generalized Anxiety Disorder,2021-05-01,,true,F41.1,"outpatient therapy, no medication currently",true,false,true,false,,2026-02-15,false,false
+SYN-0005,2003-09-18,M,permanent_resident,69,175,false,,,,,,,,,false,false,false,,,false,false
+SYN-0006,2006-05-09,F,us_born,63,120,true,mental_health,Major Depressive Disorder,2019-03-01,2022-01-01,false,F32.9,"resolved, no treatment in 4 years",false,false,false,true,,2022-01-01,false,false
+SYN-0007,2002-12-25,M,us_born,74,210,true,condition,Type 1 Diabetes,2010-04-01,,true,E10.9,"insulin dependent",true,false,false,false,,,false,false
+SYN-0008,2005-02-11,F,us_derived,65,135,true,allergy,Severe Peanut Anaphylaxis,2008-01-01,,true,T78.01,"carries epinephrine auto-injector",true,false,false,false,,,false,false

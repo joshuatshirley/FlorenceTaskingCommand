@@ -1,0 +1,15 @@
+# Defense-in-depth only — real applicant PII must never be staged in this repo in the first place.
+# These patterns catch common accidental drops; they are not a substitute for review before commit.
+*real_applicant*
+*applicant_export*
+*.pgp
+*.gpg
+EOD_JOURNAL_KEY*
+*_PII_*
+.env
+.env.*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
