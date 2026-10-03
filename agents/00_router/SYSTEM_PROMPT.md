@@ -46,5 +46,9 @@ The router never skips step 4. If the level-3 sub-agent cannot verify a specific
 | Test & Classification (ASVAB/MOS) | **Built** | `agents/50_test_classification/AGENT_PROMPT.md` |
 | Prior Service / Re-entry | **Built** | `agents/60_prior_service/AGENT_PROMPT.md` |
 | Administrative Forms (DD 1966, DD 2807-2, SF 86) | **Built** | `agents/70_administrative_forms/AGENT_PROMPT.md` |
+| Training Development | **Built** | `agents/80_training_development/AGENT_PROMPT.md` |
+| Social Media Content | **Built** (requires a live search/news tool — see `docs/platform_import_notes.md`) | `agents/90_social_media_content/AGENT_PROMPT.md` |
+
+**Not part of this router.** `agents/scheduled/daily_area_news_brief/` is a cron-triggered daily agent, not a query-routed one — the router never dispatches to it, and it never receives a Step 1 query. See its own `SPEC.md` for schedule and output.
 
 A query that the router cannot confidently map to a built domain agent should be surfaced to the recruiter as "no grounded agent exists yet for this domain" rather than answered from general knowledge. All seven domains above are built as of this revision — a genuinely out-of-scope query (one that touches none of them) is now the only case this applies to.

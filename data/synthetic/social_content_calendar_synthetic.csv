@@ -1,0 +1,4 @@
+synthetic_post_id,platform,trend_or_news_hook,draft_status,privacy_check,approval_status,scheduled_date
+POST-001,instagram,"example: viral fitness-challenge trend (placeholder, not a real trend)",draft,pass_no_pii,pending_pa_review,2026-10-10
+POST-002,tiktok,"example: Army news item on a new training record (placeholder)",draft,pass_no_pii,pending_pa_review,2026-10-12
+POST-003,facebook,"example: local Florence community event tie-in (placeholder)",draft,pass_no_pii,pending_pa_review,2026-10-15
