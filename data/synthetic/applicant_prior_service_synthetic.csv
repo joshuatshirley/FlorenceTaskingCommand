@@ -1,0 +1,7 @@
+synthetic_applicant_id,prior_branch,prior_component,prior_mos,discharge_characterization,re_code,separation_date,seeking_same_mos
+SYN-4001,army,RA,11B,honorable,RE-1,2023-05-01,true
+SYN-4002,army,USAR,25B,general,RE-3,2021-11-15,false
+SYN-4003,marine_corps,active,0311,honorable,RE-1,2024-02-20,false
+SYN-4004,army,ARNG,68W,other_than_honorable,RE-4,2020-07-10,false
+SYN-4005,army,RA,91B,honorable,RE-1,2025-01-05,true
+SYN-4006,air_force,active,3D0X2,general,RE-2,2022-09-30,false
