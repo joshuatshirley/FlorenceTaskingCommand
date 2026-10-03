@@ -1,0 +1,22 @@
+{
+  "properties": {
+    "periods": [
+      {
+        "number": 1,
+        "name": "This Afternoon",
+        "isDaytime": true,
+        "temperature": 82,
+        "temperatureUnit": "F",
+        "shortForecast": "Showers And Thunderstorms Likely"
+      },
+      {
+        "number": 2,
+        "name": "Tonight",
+        "isDaytime": false,
+        "temperature": 68,
+        "temperatureUnit": "F",
+        "shortForecast": "Showers And Thunderstorms Likely"
+      }
+    ]
+  }
+}

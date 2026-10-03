@@ -32,6 +32,7 @@ agents/
   80_training_development/            "
   90_social_media_content/            " (needs a live search/news tool)
   scheduled/daily_area_news_brief/    cron-triggered, NOT router-dispatched — SPEC.md + TEMPLATE.md + QUALITY_CHECK.md
+                                       scripts/ — working stdlib-only implementation, 30 passing tests, zero deps
 knowledge/
   doctrine/AR/, DoDI/, Pamphlets/, Manuals/, Forms/, ADP/, FM/   source regulations/manuals/forms, markdown
   standards_registry/                 machine-readable rule + form-coverage catalogs, with provenance README

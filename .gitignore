@@ -13,3 +13,13 @@ EOD_JOURNAL_KEY*
 .DS_Store
 Thumbs.db
 *.swp
+
+# Generated daily briefs are live-fetched content (real news/weather at run
+# time) — don't commit actual runs into git history. The repo ships the
+# script, not its output. See agents/scheduled/daily_area_news_brief/.
+/briefings/
+
+# Python test/runtime noise
+__pycache__/
+*.pyc
+.pytest_cache/

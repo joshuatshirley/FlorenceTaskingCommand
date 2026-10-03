@@ -14,14 +14,14 @@ The target DoD AI platform has not been chosen yet. Everything in `agents/` and 
 
 ## Live-data tool requirement (new as of the Training/Social Media/Daily Brief agents)
 
-Three agents need more than static retrieval — they need the platform to supply a **live** tool, not just a knowledge-base corpus:
+Two agents need more than static retrieval — they need a **live** tool, not just a knowledge-base corpus. Status as of 2026-10-06:
 
-| Agent | Live tool needed | Why it can't be static |
+| Agent | Live tool needed | Status |
 |---|---|---|
-| `agents/90_social_media_content/` | Web/trend search + current news | "Current pop-culture trend" and "current Army news" are undefined without a live source; the agent prompt explicitly forbids fabricating either from memory |
-| `agents/scheduled/daily_area_news_brief/` | Army news feed/RSS + local weather/events feed | Same reasoning — this is a daily digest, not a Q&A agent, so there's no human in the loop to catch a bad guess before it's published |
+| `agents/90_social_media_content/` | Web/trend search + current news | **Still platform-dependent.** "Current pop-culture trend" has no reliable free keyless API — this has to be whatever web-search/function-calling primitive the eventual platform provides. The agent prompt explicitly forbids fabricating a trend from memory if no tool is wired up. |
+| `agents/scheduled/daily_area_news_brief/` | Army news + local weather (+ local events) | **Mostly solved, platform-independent.** `scripts/_sources.py` implements real, working, stdlib-only fetchers against the official war.gov news RSS and the free `api.weather.gov` — no platform-specific tool needed, no API key, no dependency to install. Only local-events has no reliable free keyless source and stays an honest "not configured" stub (see that agent's `_README.md` for how to wire one later). |
 
-Until a platform is chosen, both agents' prompts are written to **fail safely**: if no live tool is wired up, they must output an explicit "no live source configured" literal rather than inventing content. When a platform is picked, this is the first thing to wire: whatever that platform's web-search/news/function-calling primitive is, point it at these two agents before anything else.
+So the daily brief agent's live-data need is **already met independent of platform choice** — it just needs something to run `python daily_brief.py` on a schedule (see below). Social Media Content is the one agent still genuinely blocked on the platform decision for its live-data need.
 
 ## Scheduled/cron execution requirement (new as of the Daily Brief agent)
 

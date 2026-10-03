@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Department of War News Feed</title>
+    <link>https://www.war.gov/News/News-Stories/</link>
+    <description>Stories from around the Department of War.</description>
+    <item>
+      <title>Example Headline One</title>
+      <link>https://www.war.gov/News/News-Stories/Article/Article/0000001/example-headline-one/</link>
+      <pubDate>Sat, 03 Oct 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Example Headline Two</title>
+      <link>https://www.war.gov/News/News-Stories/Article/Article/0000002/example-headline-two/</link>
+      <pubDate>Sat, 03 Oct 2026 10:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

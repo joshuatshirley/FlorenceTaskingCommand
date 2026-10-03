@@ -10,16 +10,21 @@ The other nine agents answer a specific recruiter question and verify a specific
 
 Daily, once. (The existing `doctrine intel` precedent runs at 0530; this agent should run early enough that the brief is ready before the station's first battle-rhythm event of the day.)
 
-## Pipeline
+## Pipeline — IMPLEMENTED in `scripts/` (2026-10-06)
 
-1. **Collect** (script, no LLM):
-   - Army-wide news headlines relevant to recruiting — from whatever live news/RSS tool the hosting platform provides. If the platform has no such tool, this section must render as an explicit "no live Army news source configured" literal, never a guessed or remembered headline.
-   - Local Florence-area snapshot — weather for the day, plus any notable local community events, from a live weather/local-events tool. Same empty-literal rule if no tool is configured.
-   - One rotating fact from `knowledge/local_reference/florence_area_resource_reference.md` (the sanitized, de-personalized area reference — cycle through its sections so the same fact doesn't repeat every day).
+1. **Collect** (script, no LLM — see `scripts/_sources.py`):
+   - Army/DoD news headlines — **live and working**: the official war.gov (formerly defense.gov) news RSS feed, no API key required. Verified working at build time; see `scripts/_README.md` for what to do if the feed ever moves again.
+   - Local weather — **live and working**: `api.weather.gov`, no API key required, pre-resolved gridpoint for the Florence, SC station area.
+   - Local events — **honest stub**. No reliable free keyless API was found for hyper-local Florence event listings; this section always renders the explicit "no live local-events source configured" literal until a real source is wired (see `extract_local_events()`'s docstring for how).
+   - One rotating fact from `knowledge/local_reference/florence_area_resource_reference.md` — cycles deterministically by day-of-year so it doesn't repeat on consecutive days.
 
-2. **Compose** (script or thin LLM pass): assemble the three sections into the template below. If an LLM pass is used for phrasing, it may only rephrase already-collected content — it may not add a fact that wasn't in the collected data.
+2. **Compose** (`scripts/_compose.py`): currently pure pass-through formatting — no heuristic ranking is needed here (unlike `sc_morning_brief.py`'s TOP_OF_DAY logic) because these three sections are independent, not competing for "what matters most today."
 
-3. **Publish**: write one dated file, `briefings/<YYYY-MM-DD>.md`, following `TEMPLATE.md`.
+3. **Quality check** (`daily_brief.py:run_quality_check()`): blocks publish on an SSN-shaped pattern, an unsubstituted `{{TOKEN}}`, or a brief missing today's date. See `QUALITY_CHECK.md`.
+
+4. **Publish**: atomic write to `briefings/<YYYY-MM-DD>.md` (repo-root-relative), following `TEMPLATE.md`. Skips if today's brief already exists unless `--force` is passed.
+
+Run it: `python scripts/daily_brief.py` (zero dependencies — stdlib only). Tests: `python -m pytest scripts/tests/ -v` (30 cases, all network calls mocked).
 
 ## Hard rules
 

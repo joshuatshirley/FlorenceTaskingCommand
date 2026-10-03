@@ -2,13 +2,23 @@
 
 Not a "Policy Verifier" in the Level-3 sense used elsewhere in this repo — there's no eligibility/compliance claim to cross-walk here. This is a lightweight pre-publish check the pipeline should run on every generated brief before writing it to `briefings/`.
 
-## Checks
+**Implemented** as `run_quality_check()` in `scripts/daily_brief.py`, called automatically by `main()` before every write — it is not a separate manual step.
 
-1. **No PII.** Scan for anything resembling a name, SSN-shaped string, date of birth, or address tied to an individual. The brief should contain zero individual-level personal content by construction — if any slipped in, block publication and investigate the source, don't just strip it and continue.
-2. **No fabricated-as-fact content.** Every fact in the Army News and Local Area Snapshot sections must trace to a tool call result from that run. If a section says something other than the literal "no live source configured for this run," confirm a tool call actually backs it.
-3. **Rotating fact is sourced.** Confirm today's "Local Knowledge Fact" text actually appears (verbatim or as a close paraphrase) in `knowledge/local_reference/florence_area_resource_reference.md` — this section has the same "must trace to a real source" discipline as the other agents' doctrine citations, just against a different reference file.
-4. **File hygiene.** Confirm the output path is `briefings/<today's date>.md` and that a file for today doesn't already exist (or, if it does, that this is an intentional re-run, not a silent double-write).
+## Checks actually run at publish time (`run_quality_check()`)
+
+1. **SSN-shaped pattern** (`\d{3}-\d{2}-\d{4}`) anywhere in the rendered brief — a backstop, not the primary control. The primary control is structural: no extractor in `_sources.py` ever touches applicant or personal-family data in the first place, so there should be nothing to catch.
+2. **No unsubstituted `{{TOKEN}}`** left in the rendered output — catches a template/substitution-dict mismatch before it ships.
+3. **Today's date string** must appear in the rendered brief — a cheap sanity check against a stale template or a date-parsing bug.
+
+## Guaranteed by construction, not by a runtime scan
+
+- **No fabricated-as-fact content**: `extract_army_news()` and `extract_weather()` only ever return real fetched content or one of the named failure/not-configured literals (see `_sources.py`) — there's no code path that invents a headline or forecast.
+- **Rotating fact is sourced**: `extract_rotating_fact()` only ever reads from `knowledge/local_reference/florence_area_resource_reference.md` — it cannot return text from anywhere else.
+
+## File hygiene
+
+Handled in `daily_brief.py:main()`, not in the quality-check function itself: the script skips writing if `briefings/<date>.md` already exists, unless `--force` is passed — so a double run never silently clobbers the first run's output.
 
 ## On failure
 
-Do not publish. A missing brief for one day is a minor, recoverable gap — a published brief containing fabricated news or any PII is not recoverable once distributed.
+`run_quality_check()` returning any problems blocks the write entirely (`daily_brief.py` exits 3) — nothing partial gets published. A missing brief for one day is a minor, recoverable gap; a published brief containing a PII-shaped pattern is not recoverable once distributed.
