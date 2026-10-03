@@ -1,0 +1,9 @@
+synthetic_applicant_id,relationship,dob,is_dependent,custody_arrangement,lives_with_applicant
+SYN-2001,spouse,1998-04-11,true,na,true
+SYN-2001,child,2019-08-02,true,full_custody,true
+SYN-2002,child,2020-01-15,true,joint_custody_50_50,false
+SYN-2002,child,2022-03-30,true,joint_custody_50_50,false
+SYN-2003,stepchild,2016-11-20,true,full_custody,true
+SYN-2004,spouse,1999-09-09,false,na,false
+SYN-2005,foster_child,2018-06-18,true,state_placement,true
+SYN-2006,child,2021-12-05,false,non_custodial_parent_has_primary,false
