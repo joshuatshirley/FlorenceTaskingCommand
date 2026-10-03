@@ -1,0 +1,8 @@
+synthetic_applicant_id,form,question_id,answer_yes_no,explanation
+SYN-5001,sf86,sf86_22.1_marijuana_use,true,"used socially in college, last use 2024"
+SYN-5001,dd1966,dd1966_38_drug_history,true,"consistent with SF86 22.1 response"
+SYN-5002,dd2807,dd2807_10_mental_health,false,
+SYN-5003,sf86,sf86_19_foreign_contacts,true,"cousin living in Germany, contact 2x/year"
+SYN-5004,dd1966,dd1966_8_prior_military_app,false,
+SYN-5005,sf86,sf86_26_financial_issues,true,"one collections account, paid off 2025"
+SYN-5006,dd2807,dd2807_10_mental_health,true,"outpatient counseling 2022, resolved"

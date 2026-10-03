@@ -40,11 +40,11 @@ The router never skips step 4. If the level-3 sub-agent cannot verify a specific
 | Functional domain | Status | Agent path |
 |---|---|---|
 | Medical Triage | **Built** | `agents/20_medical_triage/AGENT_PROMPT.md` |
-| Legal Adjudication | planned | — |
-| Prospecting | planned | — |
-| Family / Dependency | planned | — |
-| Test & Classification (ASVAB/MOS) | planned | — |
-| Prior Service / Re-entry | planned | — |
-| Administrative Forms (DD 1966, DD 2807-2, SF 86) | planned | — |
+| Prospecting | **Built** | `agents/10_prospecting/AGENT_PROMPT.md` |
+| Legal Adjudication | **Built** | `agents/30_legal_adjudication/AGENT_PROMPT.md` |
+| Family / Dependency | **Built** | `agents/40_family_dependency/AGENT_PROMPT.md` |
+| Test & Classification (ASVAB/MOS) | **Built** | `agents/50_test_classification/AGENT_PROMPT.md` |
+| Prior Service / Re-entry | **Built** | `agents/60_prior_service/AGENT_PROMPT.md` |
+| Administrative Forms (DD 1966, DD 2807-2, SF 86) | **Built** | `agents/70_administrative_forms/AGENT_PROMPT.md` |
 
-A query that the router cannot confidently map to a built domain agent should be surfaced to the recruiter as "no grounded agent exists yet for this domain" rather than answered from general knowledge.
+A query that the router cannot confidently map to a built domain agent should be surfaced to the recruiter as "no grounded agent exists yet for this domain" rather than answered from general knowledge. All seven domains above are built as of this revision — a genuinely out-of-scope query (one that touches none of them) is now the only case this applies to.

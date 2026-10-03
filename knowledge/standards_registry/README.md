@@ -14,8 +14,12 @@ This is the primary grounding source for `agents/20_medical_triage/`.
 
 ## `army_standards_seed.json`
 
-25 general eligibility standards (age, AFQT, citizenship, dependents, etc.) sourced from AR 601-210 and DoDI 1304.26. Referenced by the Medical Triage agent where medical qualification interacts with a general standard (e.g., waiver authority chains), and will be the primary grounding source for future domain agents (Legal Adjudication, etc.) once built.
+25 general eligibility standards (age, AFQT, citizenship, dependents, felony, etc.) sourced from AR 601-210 and DoDI 1304.26. Primary grounding source for `agents/40_family_dependency/` (dependents) and `agents/50_test_classification/` (AFQT minimum), and a secondary source for `agents/20_medical_triage/` and `agents/30_legal_adjudication/` (felony) where their domain interacts with a general standard.
+
+## `sf86_question_catalog.json`, `sf86_subquestion_audit.json`, `dd1966_subquestion_audit.json`, `dd2807_subquestion_audit.json`
+
+Section- and sub-question-level coverage maps for SF 86, DD 1966, and DD 2807-2 — each question/sub-question tagged with a coverage rating (FULL/PARTIAL/FLAG/MISSING or CAPTURED/CAPTURED_ENC/DERIVED/NOTES) and a pointer to the data field it maps to. Pure schema metadata, not applicant answers. Primary grounding source for `agents/70_administrative_forms/`.
 
 ## Provenance
 
-Both files are copied as-is from the Station Commander project's local doctrine RAG system (`Station_Commander/Army_Doctrine/.rag/data/`), where they are kept current by a regulation-refresh workflow tied to AR/DoDI publication updates. If the source regulation changes, these files need to be re-synced — they are not auto-updating in this repo.
+All files are copied as-is from the Station Commander project's local doctrine RAG system (`Station_Commander/Army_Doctrine/.rag/data/`), where they are kept current by a regulation-refresh workflow tied to AR/DoDI publication updates. If the source regulation or schema changes, these files need to be re-synced — they are not auto-updating in this repo.
