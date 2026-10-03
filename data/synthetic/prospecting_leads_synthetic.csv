@@ -1,0 +1,9 @@
+synthetic_lead_id,source_channel,lead_source_detail,grad_year,interest_level,last_contact_date,status,referred_by_synthetic_id
+LEAD-0001,face_to_face,"high school lunch table",2027,high,2026-09-20,working,
+LEAD-0002,virtual,"Instagram DM response to station post",2026,medium,2026-09-15,working,
+LEAD-0003,telephone,"call list follow-up",2026,low,2026-08-30,cold,
+LEAD-0004,referral,"referred by Future Soldier",2027,high,2026-09-25,scheduled_interview,SYN-0002
+LEAD-0005,face_to_face,"community event booth",2028,medium,2026-09-10,working,
+LEAD-0006,virtual,"TikTok comment follow-up",2026,low,2026-07-05,cold,
+LEAD-0007,telephone,"warm list, prior inquiry",2025,high,2026-09-28,processing,
+LEAD-0008,referral,"referred by recruiter's own network",2027,medium,2026-09-01,working,
