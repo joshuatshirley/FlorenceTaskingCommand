@@ -1,0 +1,293 @@
+{
+  "_meta": {
+    "version": "v2-2026-05-23",
+    "form": "SF 86 — Questionnaire for National Security Positions (Standard Form 86, OPM)",
+    "purpose": "Section-by-section catalog of every SF 86 question with a pointer to where it lives in our schema. The audit script `scripts/audit_sf86_coverage.py` walks this file against information_schema and reports missing tables / fields / picklists.",
+    "coverage_legend": {
+      "FULL":    "Question fully captured by a structured field in our schema",
+      "PARTIAL": "Question captured but with missing sub-fields or no picklist",
+      "FLAG":    "Captured only as a yes/no via applicant_form_response (no structured detail)",
+      "MISSING": "No schema coverage yet — needs a new table or column"
+    },
+    "schema_files_referenced": [
+      "scripts/db/005_schema.sql", "scripts/db/008_schema.sql",
+      "scripts/db/010_schema.sql", "scripts/db/011_schema.sql"
+    ],
+    "picklists_canonical_at": "data/sf86_picklists.json"
+  },
+  "sections": [
+    {
+      "id": "1", "title": "Full Name",
+      "questions": ["legal_full_name", "any_titles_suffixes"],
+      "table": "applicant_profile",
+      "fields": ["full_name", "preferred_name", "name_suffix"],
+      "coverage": "FULL",
+      "notes": "Encrypted PII. name_suffix column added in 011_schema.sql."
+    },
+    {
+      "id": "2", "title": "Date of Birth",
+      "questions": ["date_of_birth"],
+      "table": "applicant_profile", "fields": ["dob"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "3", "title": "Place of Birth",
+      "questions": ["city_of_birth", "county_of_birth", "state_of_birth", "country_of_birth"],
+      "table": "applicant_profile",
+      "fields": ["place_of_birth_city", "place_of_birth_county", "place_of_birth_state", "country_of_birth"],
+      "coverage": "FULL",
+      "notes": "City/county/state columns added in 011_schema.sql."
+    },
+    {
+      "id": "4", "title": "Social Security Number",
+      "questions": ["ssn", "without_ssn_explain"],
+      "table": "applicant_profile", "fields": ["ssn"],
+      "coverage": "FULL",
+      "notes": "ssn_enc encrypted. 'No SSN' explanation lives in applicant_form_response if needed."
+    },
+    {
+      "id": "5", "title": "Other Names Used",
+      "questions": ["other_name_first", "other_name_middle", "other_name_last", "other_name_suffix", "name_used_from", "name_used_to", "reason_for_name_change", "still_use_other_name"],
+      "table": "applicant_other_name",
+      "fields": ["name_first_enc", "name_middle_enc", "name_last_enc", "name_suffix_enc", "used_from", "used_to", "is_current", "reason_for_change", "notes_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "6", "title": "Identifying Information",
+      "questions": ["height_feet_inches", "weight_lbs", "hair_color", "eye_color", "sex"],
+      "table": "applicant_profile",
+      "fields": ["height_inches", "weight_lbs", "gender", "hair_color", "eye_color"],
+      "coverage": "FULL",
+      "notes": "hair_color + eye_color added in 011_schema.sql; values intentionally free-text rather than enumerated."
+    },
+    {
+      "id": "7", "title": "Contact Information (telephone, email)",
+      "questions": ["home_phone", "work_phone", "mobile_phone", "extension", "international", "personal_email"],
+      "table": "applicant_contact_method (+ legacy applicant_profile.phone_primary/secondary)",
+      "fields": ["method_type", "value", "extension", "is_international", "is_primary", "valid_from", "valid_to"],
+      "coverage": "FULL",
+      "notes": "012_schema.sql added applicant_contact_method with typed picklist. Legacy applicant_profile.phone_primary/secondary fields remain for back-compat with existing data."
+    },
+    {
+      "id": "8", "title": "U.S. Passport Information",
+      "questions": ["passport_number", "passport_issue_date", "passport_expiry", "passport_book_or_card"],
+      "table": "applicant_profile",
+      "fields": ["passport_no", "passport_issue_date", "passport_expiry", "passport_book_or_card"],
+      "coverage": "FULL",
+      "notes": "passport_issue_date + passport_book_or_card added in 011_schema.sql."
+    },
+    {
+      "id": "9", "title": "Citizenship",
+      "questions": ["citizenship_status", "country_of_citizenship", "us_citizen_born_in_us", "us_citizen_born_abroad_us_parent", "us_citizen_naturalized", "us_citizen_derived", "non_us_citizen_with_us_residency"],
+      "table": "applicant_profile",
+      "fields": ["citizenship_status", "country_of_birth", "naturalization_date", "naturalization_cert_no", "immigration_doc_type"],
+      "coverage": "FULL",
+      "notes": "Granular sub-status captured via citizenship_status enum: us_born / us_naturalized / us_derived / permanent_resident / etc."
+    },
+    {
+      "id": "10", "title": "Dual/Multiple Citizenship & Foreign Passport",
+      "questions": ["holds_other_citizenship", "country_of_other_citizenship", "how_acquired", "intent_to_renounce", "exercised_other_citizenship_rights", "foreign_passport_held", "foreign_passport_country", "foreign_passport_number", "foreign_passport_issue_date", "foreign_passport_expiry", "foreign_travel_with_foreign_passport"],
+      "table": "applicant_dual_citizenship + applicant_foreign_passport",
+      "fields": ["country", "how_acquired", "acquired_date", "intent_to_renounce", "exercised_rights", "passport_no_enc", "issue_date", "expiry_date", "used_for_travel"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "11", "title": "Where You Have Lived (10 years / since age 18)",
+      "questions": ["address", "city", "state", "country", "zip", "from_date", "to_date", "is_current", "verifier_name", "verifier_phone", "verifier_email", "apo_fpo"],
+      "table": "applicant_residence",
+      "fields": ["address", "city", "state", "country", "zip", "start_date", "end_date", "verifier_name_enc", "verifier_phone_enc", "verifier_email_enc", "verifier_relationship", "apo_fpo"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "12", "title": "Where You Went to School",
+      "questions": ["school_name", "school_type", "address", "from_date", "to_date", "degree", "graduation_date", "verifier_name", "verifier_phone"],
+      "table": "applicant_education",
+      "fields": ["institution", "level", "school_type", "location", "start_date", "end_date", "graduated", "degree", "verifier_name_enc", "verifier_phone_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "13A", "title": "Employment Activities — Employee",
+      "questions": ["employer_name", "address", "position", "start_date", "end_date", "supervisor", "reason_for_leaving", "is_federal", "security_clearance_held"],
+      "table": "applicant_employment",
+      "fields": ["employer", "position_title", "address", "start_date", "end_date", "supervisor_name", "supervisor_phone", "reason_for_leaving", "employment_type", "is_federal", "federal_agency", "security_clearance_level", "verifier_name_enc", "verifier_phone_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "13B", "title": "Self-Employment",
+      "questions": ["business_name", "type_of_business", "address", "from_date", "to_date", "verifier", "income_range"],
+      "table": "applicant_employment",
+      "fields": ["employer", "employment_type='self'", "business_type", "income_range", "verifier_name_enc", "verifier_phone_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "13C", "title": "Unemployment",
+      "questions": ["from_date", "to_date", "verifier_name", "verifier_phone"],
+      "table": "applicant_employment",
+      "fields": ["employment_type='unemployed'", "start_date", "end_date", "verifier_name_enc", "verifier_phone_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "14", "title": "Selective Service",
+      "questions": ["sss_required", "registered", "registration_number", "exemption_reason"],
+      "table": "applicant_profile",
+      "fields": ["selective_service_no", "sss_registered", "sss_exemption_reason"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "15", "title": "Military History",
+      "questions": ["served_us_armed_forces", "branch", "from_date", "to_date", "discharge_type", "discharge_date", "discharge_explanation", "court_martial_history", "disciplinary_action"],
+      "table": "applicant_prior_service",
+      "fields": ["branch", "component", "start_date", "end_date", "rank_at_separation", "mos", "discharge_type", "re_code", "discharge_explanation_enc", "court_martial_history", "disciplinary_history", "documents"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "16", "title": "People Who Know You Well (3 references)",
+      "questions": ["name", "dates_known_from", "dates_known_to", "telephone", "email", "address", "relationship", "rapport_quality"],
+      "table": "applicant_character_reference",
+      "fields": ["name", "relationship", "years_known", "phone", "email", "address", "referenced_employment_id"],
+      "coverage": "FULL",
+      "notes": "referenced_employment_id FK added in 011 so a reference who is a supervisor at a §13 employer cross-links without duplicating contact info."
+    },
+    {
+      "id": "17", "title": "Marital/Relationship Status",
+      "questions": ["current_status", "spouse_full_name", "spouse_dob", "spouse_pob", "spouse_country_of_citizenship", "marriage_date", "marriage_location", "spouse_ssn", "divorce_dates", "cohabitant_full_name", "cohabitant_dob", "cohabitant_pob"],
+      "table": "applicant_marital_history + applicant_family_member",
+      "fields": ["status", "marriage_date", "marriage_location_enc", "separation_date", "divorce_date", "divorce_location_enc", "end_reason", "spouse_ssn_enc", "spouse_country_of_citizenship", "family_member_id (FK)"],
+      "coverage": "FULL",
+      "notes": "Marital history events FK to family_member rows so name/DOB lives in one place."
+    },
+    {
+      "id": "18", "title": "Relatives",
+      "questions": ["mother_father_stepparent_foster_parent_guardian", "children", "siblings_half_step", "in_laws", "name", "dob", "pob", "citizenship", "address", "living_or_deceased", "country_of_citizenship_if_dual"],
+      "table": "applicant_family_member",
+      "fields": ["relationship", "name", "dob", "citizenship_status", "place_of_birth_enc", "country_of_birth", "country_of_residence", "address_enc", "is_deceased", "deceased_date", "is_us_citizen", "occupation_enc"],
+      "coverage": "FULL",
+      "notes": "Relationship CHECK extended in 011 to include step/in-law variants."
+    },
+    {
+      "id": "19", "title": "Foreign Contacts",
+      "questions": ["name", "relationship", "country_of_citizenship", "frequency_of_contact", "first_contact_date", "last_contact_date", "country_of_residence", "is_close_continuing", "government_affiliation", "method_of_contact"],
+      "table": "applicant_foreign_contact",
+      "fields": ["name", "relationship", "countries", "country_of_citizenship", "country_of_residence", "government_affiliation", "affiliation_detail", "contact_frequency", "method_of_contact", "first_contact_date", "last_contact_date", "is_close_continuing"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "20A", "title": "Foreign Activities — Financial Interests",
+      "questions": ["foreign_financial_interest", "type_of_interest", "country", "value_estimate", "date_acquired", "date_disposed", "co_owners", "us_govt_approval"],
+      "table": "applicant_foreign_financial_interest",
+      "fields": ["interest_type", "country", "description_enc", "value_usd_estimate", "date_acquired", "date_disposed", "co_owners_enc", "us_govt_approved", "is_current"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "20B", "title": "Foreign Business, Professional Activities, Foreign Government Contacts",
+      "questions": ["foreign_business_activity", "type_of_activity", "country", "from_date", "to_date", "approved_by_us_govt", "foreign_govt_contact", "title_of_foreign_official", "purpose"],
+      "table": "applicant_foreign_business_activity",
+      "fields": ["activity_type", "country", "organization_enc", "role_or_title_enc", "purpose_enc", "from_date", "to_date", "us_govt_approved", "foreign_official_name_enc", "foreign_official_title_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "20C", "title": "Foreign Travel",
+      "questions": ["country", "from_date", "to_date", "purpose", "official_or_unofficial", "questioned_by_foreign_govt", "encountered_with_foreign_authorities", "involved_with_foreign_intelligence"],
+      "table": "applicant_foreign_travel",
+      "fields": ["country", "start_date", "end_date", "purpose", "days_total", "sponsoring_employer", "has_contact_with_foreign_gov", "was_official", "questioned_by_foreign_gov", "encountered_intelligence", "visa_held_country", "encounter_detail_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "21", "title": "Psychological & Emotional Health",
+      "questions": ["court_ordered_psych_eval", "consulted_mental_health_professional", "diagnosis_anxiety_depression_etc", "currently_in_treatment", "treatment_dates", "medication", "hospitalization", "suicidal_ideation"],
+      "table": "applicant_mental_health_detail",
+      "fields": ["has_anxiety_disorder", "has_depression", "has_adhd", "has_autism_spectrum", "has_ptsd", "has_bipolar", "has_schizophrenia", "has_eating_disorder", "has_learning_disorder", "has_personality_disorder", "has_psych_inpatient", "has_psych_outpatient", "last_psych_treatment_date", "psych_meds_current", "psych_meds_past", "has_suicide_attempt", "has_suicidal_ideation", "self_harm_history", "last_episode_date"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "22", "title": "Police Record",
+      "questions": ["last_seven_years_arrests", "charges_summons_citations_tickets", "alcohol_drug_related", "domestic_violence_protective_order", "felony_charges_any_time", "firearms_explosives_charges", "currently_on_probation_parole", "convictions_resulting_in_imprisonment"],
+      "table": "applicant_legal_event",
+      "fields": ["event_type", "event_date", "jurisdiction", "state", "charge", "severity", "disposition", "sentence", "is_expunged", "court_documents", "involves_domestic_violence", "involves_firearms", "involves_explosives", "currently_on_probation", "currently_on_parole", "protective_order_active"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "23", "title": "Illegal Use of Drugs & Drug Activity",
+      "questions": ["per_substance_use_history", "frequency", "voluntary_treatment", "ordered_treatment", "while_holding_clearance", "while_in_safety_position", "purchase_sale_transport"],
+      "table": "applicant_drug_history",
+      "fields": ["substance", "first_use_date", "last_use_date", "frequency", "total_uses_estimate", "involved_treatment", "treatment_provider", "treatment_outcome", "work_related", "involved_purchase", "involved_sale_distribute", "requires_waiver"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "24", "title": "Use of Alcohol",
+      "questions": ["alcohol_negatively_impacted_work_family_finances_legal", "treatment_voluntary_or_ordered", "currently_in_treatment", "completed_treatment", "diagnosis_of_alcohol_use_disorder"],
+      "table": "applicant_alcohol_history",
+      "fields": ["has_negative_impact", "impacted_areas", "diagnosed_use_disorder", "in_treatment_currently", "treatment_voluntary", "treatment_completed", "treatment_start_date", "treatment_end_date", "treatment_provider_enc", "abstinence_period_months"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "25", "title": "Investigations & Clearance Record",
+      "questions": ["previously_investigated_us_govt", "level_of_clearance", "agency", "date_granted", "date_revoked", "denied_clearance", "had_clearance_suspended"],
+      "table": "applicant_clearance_history",
+      "fields": ["investigation_type", "agency", "clearance_level", "granted_date", "revoked_date", "suspended_date", "denied_date", "outcome", "reason_enc", "case_number_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "26", "title": "Financial Record",
+      "questions": ["filed_bankruptcy", "had_lien_civil_judgment_tax_lien", "wage_garnishment", "delinquent_alimony_child_support", "delinquent_federal_debt", "delinquent_180_days", "currently_60_days_late", "had_credit_card_charged_off", "gambling_problem", "failed_to_file_taxes"],
+      "table": "applicant_financial_event",
+      "fields": ["event_type", "event_date", "amount", "creditor", "status", "resolution_date", "is_disclosed_sf86"],
+      "coverage": "FULL",
+      "notes": "event_type CHECK extended in 011 to cover all SF 86 §26 sub-questions explicitly."
+    },
+    {
+      "id": "27", "title": "Use of Information Technology Systems",
+      "questions": ["unauthorized_access_attempt", "illegal_or_unauthorized_modification", "introduced_malicious_code", "violated_security_policy"],
+      "table": "applicant_it_violation",
+      "fields": ["violation_type", "event_date", "system_description_enc", "employer_enc", "referenced_employment_id", "disciplinary_action", "investigation_outcome"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "28", "title": "Involvement in Non-Criminal Court Actions",
+      "questions": ["civil_action_party_to_lawsuit", "court", "case_number", "outcome"],
+      "table": "applicant_civil_court_action",
+      "fields": ["action_type", "court_name", "jurisdiction", "case_number_enc", "filing_date", "disposition_date", "outcome", "summary_enc"],
+      "coverage": "FULL"
+    },
+    {
+      "id": "29", "title": "Association Record",
+      "questions": ["member_of_terrorism_advocating_org", "advocated_overthrow_us_govt", "engaged_in_terrorism", "associated_with_anyone_doing_above"],
+      "table": "applicant_association",
+      "fields": ["association_type", "organization_name_enc", "from_date", "to_date", "role_or_position_enc", "purpose_enc", "is_current"],
+      "coverage": "FULL"
+    }
+  ],
+  "deduplication_strategy": {
+    "purpose": "Ensure the same fact isn't entered twice in different places. SF 86 has natural overlap (e.g. spouse appears in §17 marital AND §18 relatives; foreign country appears in §11 residence + §19 contacts + §20C travel; employer appears in §13A + §16 references).",
+    "rules": [
+      {
+        "rule": "Spouse = applicant_family_member.relationship='spouse'; marital metadata lives in applicant_marital_history with FK to that family_member.id. §17 reads from both tables; do not duplicate name fields.",
+        "implemented_via": "FK applicant_marital_history.family_member_id -> applicant_family_member.id (011_schema.sql)"
+      },
+      {
+        "rule": "Foreign exposure (country surfaced in residence + travel + contacts + business + financial interest) is unified in v_applicant_foreign_exposure for one-screen review.",
+        "implemented_via": "View v_applicant_foreign_exposure (011_schema.sql)"
+      },
+      {
+        "rule": "Employer in §13 employment + §16 character reference: reference rows that name an employer FK back to applicant_employment.id when applicable.",
+        "implemented_via": "applicant_character_reference.referenced_employment_id (011_schema.sql)"
+      },
+      {
+        "rule": "Employer in §13 + §27 IT violation: IT violation row FKs to the employment row where the violation occurred, avoiding duplicate employer entry.",
+        "implemented_via": "applicant_it_violation.referenced_employment_id (011_schema.sql)"
+      },
+      {
+        "rule": "Legal event in §22 police + §28 civil court: civil court rows do NOT duplicate criminal arrests; distinct tables.",
+        "implemented_via": "applicant_legal_event.event_type CHECK excludes civil events; applicant_civil_court_action holds civil only."
+      },
+      {
+        "rule": "Mental-health diagnosis flag (§21) + medical_event row: mh_detail.has_X is a yes/no rollup that the validator can match against medical_event rows for detail; condition matcher uses both signals.",
+        "implemented_via": "eod.applicant.matching.MH_FLAG_MAP"
+      },
+      {
+        "rule": "Picklist values consolidated in data/sf86_picklists.json; SQL CHECK constraints duplicate them; tests/test_picklist_consistency.py asserts no drift.",
+        "implemented_via": "Test test_registry_matches_sql_check_constraints"
+      }
+    ]
+  }
+}

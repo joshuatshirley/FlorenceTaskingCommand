@@ -1,0 +1,119 @@
+{
+  "_meta": {
+    "version": "v1-2026-05-24",
+    "form": "DD 1966 — Record of Military Processing — Armed Forces of the United States",
+    "purpose": "Sub-question-level coverage map for DD 1966 (the master enlistment record). Same shape as data/sf86_subquestion_audit.json. Most DD 1966 blocks overlap SF 86 fields; this audit confirms the linkage so we don't double-collect.",
+    "coverage_legend": {
+      "CAPTURED":      "Sub-question has a dedicated structured column",
+      "CAPTURED_ENC":  "Captured in an encrypted PII column",
+      "DERIVED":       "Captured implicitly by another column",
+      "NOTES":         "Captured only in free-text notes",
+      "FORM_RESPONSE": "Captured only via applicant_form_response yes/no",
+      "MISSING":       "No schema coverage yet"
+    },
+    "source": "OMB-approved DD 1966 form (latest revision SEP 2017 used as baseline). Numbering matches form blocks."
+  },
+  "subquestions": [
+    {"section":"1",  "id":"1",   "q":"Name (legal full name)",
+     "table":"applicant_profile","field":"full_name + name_suffix","coverage":"CAPTURED_ENC"},
+    {"section":"2",  "id":"2",   "q":"Social Security Number",
+     "table":"applicant_profile","field":"ssn","coverage":"CAPTURED_ENC"},
+    {"section":"3",  "id":"3",   "q":"Aliases / Other Names Used",
+     "table":"applicant_other_name","field":"name_first_enc..name_last_enc","coverage":"CAPTURED_ENC"},
+    {"section":"4",  "id":"4a",  "q":"Current home address",
+     "table":"applicant_profile + applicant_residence","field":"address_current + residence rows where is_current","coverage":"CAPTURED_ENC"},
+    {"section":"4",  "id":"4b",  "q":"How long at current address",
+     "table":"applicant_residence","field":"start_date (derived gap to today)","coverage":"DERIVED"},
+    {"section":"5",  "id":"5",   "q":"Telephone numbers (home/work/mobile)",
+     "table":"applicant_contact_method","field":"method_type IN (home_phone, work_phone, mobile_phone)","coverage":"CAPTURED_ENC"},
+    {"section":"6",  "id":"6a",  "q":"Place of birth (city/state/country)",
+     "table":"applicant_profile","field":"place_of_birth_city/state/country","coverage":"CAPTURED"},
+    {"section":"6",  "id":"6b",  "q":"Citizenship status / certificate number",
+     "table":"applicant_profile","field":"citizenship_status + naturalization_cert_no","coverage":"CAPTURED"},
+    {"section":"6",  "id":"6c",  "q":"Date of birth",
+     "table":"applicant_profile","field":"dob","coverage":"CAPTURED"},
+    {"section":"6",  "id":"6d",  "q":"Sex",
+     "table":"applicant_profile","field":"gender","coverage":"CAPTURED"},
+    {"section":"6",  "id":"6e",  "q":"Race / ethnic group (self-identified)",
+     "table":"applicant_profile","field":"race[] + ethnicity","coverage":"CAPTURED"},
+    {"section":"6",  "id":"6f",  "q":"Religious preference",
+     "table":"applicant_profile","field":"religion","coverage":"CAPTURED"},
+
+    {"section":"7",  "id":"7",   "q":"Marital status / # of dependents",
+     "table":"applicant_marital_history + applicant_family_member","field":"status + dependent counts","coverage":"CAPTURED"},
+
+    {"section":"8",  "id":"8",   "q":"Education — schools attended",
+     "table":"applicant_education","field":"institution + level + tier + start/end","coverage":"CAPTURED_ENC"},
+
+    {"section":"9",  "id":"9",   "q":"Citizenship verification (US-born w/ certificate, etc.)",
+     "table":"applicant_profile","field":"citizenship_status + immigration_doc_type + naturalization_cert_no","coverage":"CAPTURED"},
+
+    {"section":"10", "id":"10",  "q":"Have you ever applied to any branch of the military before",
+     "table":"applicant_prev_military_app","field":"branch + outcome","coverage":"CAPTURED"},
+
+    {"section":"11", "id":"11",  "q":"Have you ever served in any branch of the military / National Guard / Reserve",
+     "table":"applicant_prior_service","field":"branch + start/end + discharge_type + re_code","coverage":"CAPTURED"},
+
+    {"section":"12", "id":"12",  "q":"Civilian employment history (last 5 years)",
+     "table":"applicant_employment","field":"employer + dates + reason_for_leaving","coverage":"CAPTURED_ENC"},
+
+    {"section":"13", "id":"13",  "q":"Bond, indebtedness, or judgments against you",
+     "table":"applicant_financial_event","field":"event_type IN (civil_judgment, lien, bankruptcy_*, charge_off)","coverage":"CAPTURED_ENC"},
+
+    {"section":"14", "id":"14",  "q":"Has any member of your immediate family served in the US military",
+     "table":"applicant_immediate_family_svc","field":"relationship + branch + status","coverage":"CAPTURED_ENC"},
+
+    {"section":"15", "id":"15",  "q":"Have you ever been adjudicated a juvenile delinquent",
+     "table":"applicant_legal_event","field":"event_type='juvenile'","coverage":"CAPTURED"},
+    {"section":"16", "id":"16",  "q":"Have you ever been convicted in any court",
+     "table":"applicant_legal_event","field":"event_type='conviction'","coverage":"CAPTURED_ENC"},
+    {"section":"17", "id":"17",  "q":"Are you currently on probation, parole, or under suspended sentence",
+     "table":"applicant_legal_event","field":"currently_on_probation OR currently_on_parole","coverage":"CAPTURED"},
+    {"section":"18", "id":"18",  "q":"Have you ever been arrested, charged, cited, or held by federal/state/local police",
+     "table":"applicant_legal_event","field":"event_type IN (arrest, citation, charge)","coverage":"CAPTURED_ENC"},
+
+    {"section":"19", "id":"19",  "q":"Have you ever used / sold / possessed marijuana or other illegal drugs",
+     "table":"applicant_drug_history","field":"substance + frequency + involved_purchase + involved_sale_distribute","coverage":"CAPTURED"},
+    {"section":"19b","id":"19b", "q":"Have you ever been treated for drug or alcohol abuse",
+     "table":"applicant_drug_history + applicant_alcohol_history","field":"involved_treatment + treatment_outcome","coverage":"CAPTURED"},
+
+    {"section":"20", "id":"20",  "q":"Have you ever applied for / been denied a security clearance",
+     "table":"applicant_clearance_history","field":"outcome IN ('denied','revoked')","coverage":"CAPTURED_ENC"},
+
+    {"section":"21", "id":"21",  "q":"Are you a conscientious objector",
+     "table":"applicant_form_response","field":"form_type='dd_1966' AND question_key='21_conscientious_objector'","coverage":"FORM_RESPONSE"},
+    {"section":"22", "id":"22",  "q":"Are you registered with Selective Service (males)",
+     "table":"applicant_profile","field":"sss_registered + selective_service_no","coverage":"CAPTURED_ENC"},
+
+    {"section":"23", "id":"23",  "q":"Are you presently a member of any organization that espouses violence / overthrow",
+     "table":"applicant_association","field":"association_type","coverage":"CAPTURED_ENC"},
+
+    {"section":"24", "id":"24",  "q":"Acknowledge dependents support (financial obligation)",
+     "table":"applicant_family_member","field":"support_obligation_amt + support_obligation_doc","coverage":"CAPTURED_ENC"},
+
+    {"section":"25", "id":"25",  "q":"Verifier reference (3 people who know you)",
+     "table":"applicant_character_reference","field":"name + phone + email + relationship","coverage":"CAPTURED_ENC"},
+
+    {"section":"26", "id":"26",  "q":"Term of enlistment selected (years)",
+     "table":"applicant_enlistment_preference","field":"term_years","coverage":"CAPTURED"},
+    {"section":"27", "id":"27",  "q":"Component / Branch / MOS preferences",
+     "table":"applicant_enlistment_preference","field":"component + program + mos_preference_{1,2,3}","coverage":"CAPTURED"},
+    {"section":"28", "id":"28",  "q":"Date available to ship",
+     "table":"applicant_enlistment_preference","field":"desired_ship_date + earliest_ship_date + latest_ship_date","coverage":"CAPTURED"},
+
+    {"section":"29", "id":"29",  "q":"Enlistment incentives requested (bonus / SLRP / CF / etc.)",
+     "table":"applicant_incentive","field":"incentive_type + amount_offered","coverage":"CAPTURED"},
+
+    {"section":"30", "id":"30",  "q":"Applicant certification / signature",
+     "table":"applicant_form_response","field":"form_type='dd_1966' AND signed_by_applicant=true","coverage":"FORM_RESPONSE"},
+    {"section":"31", "id":"31",  "q":"Witness (recruiter) certification / signature",
+     "table":"applicant_form_response","field":"form_type='dd_1966' AND question_key='31_recruiter_signature'","coverage":"FORM_RESPONSE"},
+
+    {"section":"32", "id":"32",  "q":"Fingerprints captured (link to FD-258 or biometric record)",
+     "table":"applicant_form_response","field":"form_type='dd_1966' AND question_key='32_fingerprints_taken'","coverage":"FORM_RESPONSE",
+     "note":"Actual fingerprint biometric is not stored here — only the captured-yes/no acknowledgement."},
+
+    {"section":"33", "id":"33",  "q":"Statement of personal history (any remarks not covered elsewhere)",
+     "table":"applicant_form_response","field":"form_type='dd_1966' AND question_key='33_remarks' with explanation_enc","coverage":"FORM_RESPONSE"}
+  ]
+}

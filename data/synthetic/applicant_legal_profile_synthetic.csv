@@ -1,0 +1,9 @@
+synthetic_applicant_id,event_type,event_date,jurisdiction,state,severity,charge_description,disposition,expunged,prior_waiver_requested
+SYN-1001,traffic,2025-06-01,municipal,SC,infraction,"Speeding, 15 over","fine paid",false,false
+SYN-1002,charge,2023-02-14,county,SC,misdemeanor,"Simple possession, marijuana","convicted",false,true
+SYN-1003,conviction,2021-08-09,county,NC,felony,"Grand larceny","convicted, served probation",false,false
+SYN-1004,juvenile,2018-04-20,county,SC,misdemeanor,"Shoplifting","adjudicated juvenile, case closed",true,false
+SYN-1005,citation,2024-11-30,municipal,SC,infraction,"Minor in possession of alcohol","fine paid",false,false
+SYN-1006,civil_judgment,2022-05-17,county,SC,na,"Unpaid medical debt, civil judgment entered","judgment satisfied",false,false
+SYN-1007,arrest,2020-01-05,county,SC,misdemeanor,"Disorderly conduct","charges dropped",false,false
+SYN-1008,court_martial,,,,,,,,
